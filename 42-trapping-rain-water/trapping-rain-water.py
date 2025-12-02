@@ -6,11 +6,15 @@ class Solution:
         maxLeft = height[l]
         while l <= r:
             if maxRight > maxLeft:
-                maxLeft = max(maxLeft, height[l])
-                area += maxLeft - height[l]
+                if maxLeft > height[l]:
+                    area += maxLeft - height[l]
+                else:
+                    maxLeft = height[l]
                 l += 1
             else:
-                maxRight = max(maxRight, height[r])
-                area += maxRight - height[r]
+                if maxRight > height[r]:
+                    area += maxRight - height[r]
+                else:
+                    maxRight = height[r]
                 r -= 1
         return area
