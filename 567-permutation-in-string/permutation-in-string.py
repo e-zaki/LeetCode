@@ -3,25 +3,39 @@ class Solution:
         if len(s1) > len(s2):
             return False
 
-        count1 = {}
-        count2 = {}
-        for char in s1:
-            count1[char] = count1.get(char, 0) + 1
-            
-        for i in range(len(s1)):
-            count2[s2[i]] = count2.get(s2[i], 0) + 1
+        s1_counter = [0] * 26
+        s2_counter = [0] * 26
 
-        if count1 == count2:
-            return True
+        for i in range(len(s1)):
+            s1_counter[ord(s1[i]) - ord('a')] += 1
+            s2_counter[ord(s2[i]) - ord('a')] += 1
+
+        matches = 0
+        for i in range(26):
+            if s1_counter[i] == s2_counter[i]:
+                matches += 1
 
         l = 0
         for r in range(len(s1), len(s2)):
-            count2[s2[r]] = count2.get(s2[r], 0) + 1
-            count2[s2[l]] -= 1
-            if count2[s2[l]] == 0:
-                del count2[s2[l]]
-            l += 1
-            if count1 == count2:
+            if matches == 26:
                 return True
-                
-        return False
+
+            r_index = ord(s2[r]) - ord('a')
+            s2_counter[r_index] += 1
+        
+            if s2_counter[r_index] == s1_counter[r_index]:
+                matches += 1
+            elif s2_counter[r_index] == s1_counter[r_index] + 1:
+                matches -= 1
+
+            l_index = ord(s2[l]) - ord('a')
+            s2_counter[l_index] -= 1
+
+            if s2_counter[l_index] == s1_counter[l_index]:
+                matches += 1
+            elif s2_counter[l_index] == s1_counter[l_index] - 1:
+                matches -= 1
+
+            l += 1
+
+        return matches == 26
